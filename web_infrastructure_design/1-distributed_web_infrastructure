@@ -1,0 +1,53 @@
+1. Overview of Infrastructure
+
+This web infrastructure uses three servers to host the website www.foobar.com. The infrastructure includes:
+
+    2 application servers
+    1 web server (Nginx)
+    1 load balancer (HAproxy)
+    1 set of application files (your codebase)
+    1 database (MySQL)
+
+The infrastructure distributes the load across multiple servers to improve reliability, availability, and scalability.
+2. Components and Their Roles
+
+    Load Balancer (HAproxy):
+        The load balancer sits in front of the web and application servers and distributes incoming traffic between the two application servers. The purpose of adding a load balancer is to ensure that no single server becomes overwhelmed with traffic.
+        Distribution Algorithm: The load balancer is configured with a Round-Robin algorithm. This algorithm evenly distributes requests across the two application servers. For each new request, the load balancer forwards it to the next server in the list, cycling through all available servers in a round-robin fashion. This helps distribute the load equally.
+        Active-Active vs. Active-Passive:
+            The load balancer is configured in an Active-Active setup. This means that both application servers are actively handling traffic at the same time. In case one server fails, the other continues to handle traffic, ensuring high availability.
+            An Active-Passive setup would have one server actively handling traffic, while the second server remains idle in a standby state. If the active server fails, the passive server would take over. Active-Active provides better resource utilization than Active-Passive but may require more advanced synchronization.
+
+    Web Server (Nginx):
+        The Nginx web server handles incoming HTTP/HTTPS requests and serves static content like HTML, CSS, JavaScript, and images. It also forwards dynamic requests (e.g., database queries) to the application servers.
+        Nginx is configured on each of the application servers to handle requests passed through from the load balancer, ensuring both servers can serve the website content.
+
+    Application Servers:
+        These two servers host the application files and run the web application (e.g., PHP, Python, etc.). The load balancer distributes the user requests between these two servers.
+        The application servers are responsible for processing dynamic content requests, interacting with the database, and rendering the web pages.
+
+    Database (MySQL):
+        The database stores all the dynamic content of the website, such as user data, product details, posts, and orders.
+        In this infrastructure, we use a Primary-Replica (Master-Slave) database setup. The primary (master) database handles all write operations, while the replica (slave) database handles read operations. The replica database keeps in sync with the primary database by continuously replicating the data. This setup improves performance by offloading read operations from the primary database, and also adds redundancy.
+
+    Application Files (Codebase):
+        The application files, which contain the code for the web application, are deployed on both application servers. This ensures that no matter which server the load balancer directs traffic to, the user will experience the same functionality.
+
+3. Database Primary-Replica Cluster
+
+    Primary Node: The primary (master) database is responsible for handling all write operations. Whenever the application creates, updates, or deletes data, the primary database processes those changes.
+    Replica Node: The replica (slave) database is used to handle read operations. It continuously replicates the data from the primary database to keep itself in sync. This improves scalability by offloading some of the read requests from the primary database and also provides redundancy in case the primary database fails.
+
+The key difference in regard to the application is that write requests are always directed to the primary node, while read requests can be directed to either the primary or the replica node.
+4. Potential Issues with This Infrastructure
+
+    Single Points of Failure (SPOF):
+        The load balancer itself can be a single point of failure. If the load balancer fails, no traffic can reach the web servers, resulting in the website becoming unavailable. To avoid this, you could add a second load balancer with failover capabilities.
+        The primary database is also a single point of failure. If the primary database fails, the website cannot handle any write operations. A database failover setup or promoting the replica to the primary could mitigate this.
+
+    Security Issues:
+        The current infrastructure lacks firewalls to protect the servers from malicious traffic. Adding firewalls to filter incoming requests based on IP addresses, protocols, and ports can improve security.
+        No HTTPS is mentioned, meaning traffic between users and the server is transmitted in plain text. HTTPS should be implemented to encrypt the data and secure communication between the user's browser and the web server.
+
+    No Monitoring:
+        The infrastructure lacks any kind of monitoring. Monitoring tools such as Prometheus, Grafana, or ELK stack can help track server health, load, and potential issues like slow responses or server downtime. Without monitoring, it would be difficult to detect issues until the service becomes unavailable.

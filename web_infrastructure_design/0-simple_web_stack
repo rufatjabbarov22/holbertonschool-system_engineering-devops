@@ -1,0 +1,31 @@
+1. User Request to Access the Website
+
+When a user opens their browser and types www.foobar.com, the browser sends a request to the Domain Name System (DNS) to translate the domain name into an IP address. The DNS responds with the IP address 8.8.8.8, which corresponds to the server hosting the website. The browser then sends an HTTP request to this IP address to load the website.
+2. Components of the Infrastructure
+
+This infrastructure consists of several key components that work together to deliver the website to the user:
+
+    Server: A server is a physical or virtual machine responsible for hosting websites and applications. In this case, the server has an IP address of 8.8.8.8. It contains all necessary software to run a web application, including the web server, application server, and database.
+
+    Domain Name (foobar.com): A domain name is a human-readable address that directs users to the server where the website is hosted. Instead of typing the server's IP address (8.8.8.8), users can simply type www.foobar.com. This domain name is mapped to the server’s IP address using DNS.
+
+    DNS Record (www): The www in www.foobar.com is a subdomain, and its DNS record is an A record, which links the subdomain www to the server's IP address 8.8.8.8. When users visit www.foobar.com, the browser uses this record to find the server.
+
+    Web Server (Nginx): The web server (Nginx) listens for incoming requests from users and handles them. It serves static files like HTML, CSS, and images directly to the browser. For dynamic requests (e.g., fetching user-specific data), it forwards these requests to the application server.
+
+    Application Server: The application server is where your web application's code is executed. It processes dynamic requests, such as form submissions or requests that involve database operations. It runs the core logic of the website, typically in a language like PHP, Python, or Node.js.
+
+    Application Files (Codebase): These are the files that make up the website, including the web application code (HTML, CSS, PHP, etc.). They define how the website functions and interact with the database to serve dynamic content.
+
+    Database (MySQL): The database stores all dynamic content, such as user information, blog posts, product details, etc. MySQL is the database management system used in this infrastructure, allowing the application to retrieve and store data as needed.
+
+3. Communication Between Server and User
+
+The user’s browser and the server communicate using the HTTP or HTTPS protocol. When a user requests a webpage, the browser sends an HTTP request to the server, and the server responds with the necessary files (HTML, CSS, JS) or data (from the database). HTTPS ensures that this communication is encrypted for security.
+4. Issues with This Infrastructure
+
+    Single Point of Failure (SPOF): Since all components are hosted on a single server, if the server fails or goes offline, the entire website becomes unavailable. This is a major vulnerability in the infrastructure.
+
+    Downtime for Maintenance: When performing updates, such as deploying new code or restarting the web server (Nginx), the website experiences downtime. During this period, the site will be inaccessible to users.
+
+    Scalability: A single server has limited capacity. If the website experiences high traffic, the server could become overwhelmed, leading to slow response times or complete unavailability. This design cannot handle a large number of concurrent users and cannot easily be scaled up without adding more servers.

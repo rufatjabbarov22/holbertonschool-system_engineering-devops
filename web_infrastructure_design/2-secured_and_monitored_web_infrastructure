@@ -1,0 +1,59 @@
+Designing a Secure Three-Server Web Infrastructure for www.foobar.com
+1. Overview of Infrastructure
+
+This infrastructure includes:
+
+    1 Load Balancer (HAproxy)
+    2 Application Servers
+    1 Database Server (MySQL)
+    1 SSL Certificate for HTTPS
+    3 Firewalls
+    3 Monitoring Clients (for services like Sumologic)
+
+2. Components and Their Roles
+
+    Load Balancer (HAproxy):
+        Distributes traffic among application servers to ensure no single server is overwhelmed.
+
+    Application Servers:
+        Host the web application and serve requests. They run the same application codebase for redundancy.
+
+    Database Server (MySQL):
+        Stores dynamic content. It handles read and write requests but should be configured with replicas for redundancy.
+
+    Firewalls (3):
+        Protect the infrastructure by filtering incoming and outgoing traffic based on security rules, preventing unauthorized access and attacks.
+
+    SSL Certificate:
+        Encrypts data in transit, ensuring secure communication between users and the web server. This protects sensitive data from eavesdropping.
+
+    Monitoring Clients (3):
+        Collect performance metrics and log data for analysis. They ensure that any issues can be detected and addressed promptly.
+
+3. Specifics of the Infrastructure
+
+    Firewalls:
+        Firewalls are security devices that monitor and control incoming and outgoing network traffic based on predetermined security rules, providing a barrier between trusted internal networks and untrusted external networks.
+
+    HTTPS Traffic:
+        Traffic is served over HTTPS to encrypt data exchanged between the user and the server. This protects against man-in-the-middle attacks and ensures data integrity.
+
+    Monitoring Purpose:
+        Monitoring tools track the performance, uptime, and resource usage of the infrastructure, allowing for proactive management and issue resolution.
+
+    Data Collection:
+        Monitoring tools collect data through agents installed on each server, which gather metrics such as CPU usage, memory usage, disk I/O, and network traffic. This data is sent to a central monitoring service for analysis.
+
+    Monitoring Web Server QPS:
+        To monitor queries per second (QPS) for the web server, configure monitoring agents to track and report on web request metrics, setting thresholds for alerts to detect abnormal spikes or drops in traffic.
+
+4. Potential Issues with This Infrastructure
+
+    SSL Termination at the Load Balancer:
+        Terminating SSL at the load balancer can expose data between the load balancer and application servers in unencrypted form, creating vulnerabilities. It's better to use end-to-end encryption.
+
+    Single MySQL Server for Writes:
+        Having only one MySQL server capable of accepting writes creates a single point of failure. If the server goes down, write operations will be unavailable, impacting the application's functionality.
+
+    Homogeneous Server Components:
+        Having all servers with the same components (database, web server, and application server) can be a problem if one component fails. It reduces redundancy and increases the risk of downtime. A better approach is to use dedicated servers for different roles.

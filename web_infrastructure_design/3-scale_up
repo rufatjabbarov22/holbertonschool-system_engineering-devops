@@ -1,0 +1,32 @@
+Overview
+
+This document outlines a web infrastructure design featuring a load balancer, separate servers for web applications, and a database. The architecture enhances performance, scalability, and reliability.
+Infrastructure Components
+
+    Load Balancer (HAproxy):
+        Purpose: Distributes incoming traffic across multiple servers, preventing any single server from becoming a bottleneck. This ensures better resource utilization and improved availability.
+        Configuration: Configured as a cluster with at least one other load balancer to provide failover and redundancy.
+
+    Web Server:
+        Purpose: Handles HTTP/S requests from clients and serves static content (HTML, CSS, JavaScript, images) directly to the user. It also forwards dynamic requests to the application server.
+        Separation: By splitting the web server from the application server, each component can be optimized for its specific function.
+
+    Application Server:
+        Purpose: Executes the web application’s business logic, processes dynamic requests, interacts with the database, and generates the content sent to the user.
+        Separation: Isolating the application server from the web server enhances security and performance, allowing each server to handle specific workloads without interference.
+
+    Database Server:
+        Purpose: Manages data storage, retrieval, and manipulation for the web application. It stores user data, application settings, and other critical information.
+        Separation: By using a dedicated database server, performance is optimized for data-intensive operations, and database management can be handled independently from application logic.
+
+Benefits of This Infrastructure
+
+    Scalability: Each component can be scaled independently based on demand. For example, if traffic increases, you can add more web servers without affecting the application or database servers.
+
+    Improved Performance: With dedicated servers for each component, resources can be allocated efficiently, resulting in faster response times and better overall performance.
+
+    Enhanced Reliability: The load balancer provides redundancy and failover capabilities, reducing the risk of downtime. If one server fails, the load balancer can redirect traffic to another server seamlessly.
+
+Conclusion
+
+This infrastructure design ensures optimal performance, scalability, and reliability for hosting web applications. By clearly defining the roles of each component and separating their functionalities, we create a robust environment that can adapt to changing demands while maintaining high availability.
